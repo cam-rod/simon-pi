@@ -9,7 +9,7 @@ all_leds
 all_buttons
 sequence
 led_delay
-score
+level
 matching_led
 
 temp
@@ -46,7 +46,7 @@ def initialize():
 # This function runs the game.
 def gameplay():
     # Modify global vars
-    global sequence, led_delay, score
+    global sequence, led_delay, level
     lost = False
     checked = False
 
@@ -58,8 +58,8 @@ def gameplay():
 
     # Main gameplay loop
     while lost is False:
-        score += 1
-        print score
+        level += 1
+        print level
 
         # Generate and display the sequence
         sequence.append(single_led(randint(34,37)))
@@ -119,14 +119,25 @@ def gameplay():
             if len(sequence) < 20:
                 led_delay -= 0.05 # Decrease the flash interval
             # End if len(sequence)
-            time.sleep(1) # Break before next round
+            time.sleep(1) # Break before next level
         # End if lost
     # End while lost
 # End gameplay
 
 # This function declares a loss and closes the program
 def endgame():
-    pass
+    # Display congratulatory message
+    print '\nCongratulations, you made it to level {}!'.format(level)
+    print 'Thanks for playing Simon. Goodbye!'
+    
+    # Disable GPIO pins and cleanup
+    g.output(all_leds, g.LOW)
+    g.output(11, g.LOW) # Power off buttons
+    g.cleanup()
+
+    # Leave message visible for 5 seconds
+    time.sleep(5)
+# End endgame
 
 if __name__ == '__main__':
     # Create global variables for arrays of pins
@@ -136,7 +147,7 @@ if __name__ == '__main__':
     # Create global variables for game
     sequence = []
     led_delay = 1.00
-    score = -1
+    level = 0
     matching_led = {13: 33, 15: 35, 38: 36, 40: 37}
     single_led = lambda x: x if x <> 34 else 33 # Used to correct randint call to first pin
 
@@ -144,3 +155,4 @@ if __name__ == '__main__':
     initialize()
     gameplay()
     endgame()
+# End if __name__
