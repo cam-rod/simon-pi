@@ -1,0 +1,57 @@
+import time, RPi.GPIO, and random.randint modules
+
+def initialize():
+    set GPIO to use board pin numbering and to ignore warnings
+
+    setup all GPIO pins powering LEDs and buttons to output
+    setup all GPIO pins reading button power to input with pull-down resistor
+    power on pin 11 for buttons
+
+    display introductory text and raw_input field to start game with
+# End initialize
+
+def gameplay():
+    declare global variables sequence, led_delay, and level
+    set new vars lost and checked to False
+
+    countdown from 5 in terminal to game start
+
+    while lost is False:
+        add a level and display current level in the terminal
+
+        add a random integer between 34 and 37 (with 34 set to 33 by single_led if necessary) to sequence
+        flash each LED, with led_delay between power on/off
+        flash all LEDs thrice to indicate user's turn
+
+        for each LED in sequence
+            set checked to False
+            while checked is False, scan all buttons for input
+                if input is detected, check if the button's corresponding LED matches that of the current sequence LED
+                    if so, set checked to True and flash the corresponding LED
+                    else set checked and lost to True, and flash the correct LED 5 times
+            break if lost is True
+        
+        if lost is True, pass
+            else flash all LEDs thrice to indicate all buttons were correct
+            decrease led_delay for the first 18 rounds
+
+           wait 1 second before continuing
+# End gameplay
+
+def endgame():
+    print a congratulatory message with the final level
+
+    disable all powered pins and run GPIO built-in cleanup function
+    wait for 5 seconds before ending game
+
+if program was started directly:
+    create lists of all LED power and button input GPIO pins
+
+    create placeholder vars for sequence, led-delay, and level
+    create a dictionary of button pins matched to LED pins
+    create a lambda function to set a value of 34 to 33, but nothing else, to fix random number generation
+
+    initialize()
+    gameplay()
+    endgame()
+# End if program

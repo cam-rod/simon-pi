@@ -117,7 +117,7 @@ def gameplay():
                 g.output(all_leds, g.LOW)
                 time.sleep(0.1)
             # End for i
-            if len(sequence) < 20:
+            if len(sequence) < 19:
                 led_delay -= 0.05 # Decrease the flash interval
             # End if len(sequence)
             time.sleep(1) # Break before next level
