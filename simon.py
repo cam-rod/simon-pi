@@ -5,16 +5,16 @@
 """
 Data Dictionary
 
-all_leds
-all_buttons
-sequence
-led_delay
-level
-matching_led
+all_leds: list: contains the numbers of all the GPIO pins that power the LEDs
+all_buttons: list: contains the numbers of all the GPIO pins that take input from the butttons
+sequence: list: a randomly generated list of LED pins for the user to match with the buttons
+led_delay: float: the amount of time between LED flashes during the "teaching" stage
+level: int: the user's current level, which is the number of LEDs shown
+matching_led: dict: matches each button input pin to the LED power pin for verification
 
-temp
-lost
-checked
+temp: str: used to hold raw_input at start of game
+lost: bool: indicates if the player has lost the game
+checked: bool: indicates if the current sequence LED has been checked for an input match
 """
 
 import time # For flashing LEDs
@@ -29,7 +29,7 @@ def initialize():
 
     # Setup input (with pulldown resistor) and output pins
     g.setup([11, 33, 35, 36, 37], g.OUT)
-    g.setup([13, 15, 38, 40], g.IN, pull_up_down=g.PUD_DOWN)
+    g.setup(all_buttons, g.IN, pull_up_down=g.PUD_DOWN)
     g.output(11, g.HIGH) # Power for button supply
 
     # Introduce game
@@ -53,13 +53,14 @@ def gameplay():
     # Display a countdown ending
     for i in range(5,-1,-1):
         print i
+        time.sleep(1)
     # End for i
     print ''
 
     # Main gameplay loop
     while lost is False:
         level += 1
-        print level
+        print 'Level {}'.format(level)
 
         # Generate and display the sequence
         sequence.append(single_led(randint(34,37)))
@@ -88,9 +89,9 @@ def gameplay():
                             checked = True # Break button scan loop
                             g.output(matching_led[j], g.HIGH) # Flash LED
                             time.sleep(0.7)
-                            g.output(matching_led[j], g.LOE)
+                            g.output(matching_led[j], g.LOW)
                         else:
-                            for i in range(5): # Flash the correct answer 5 times
+                            for k in range(5): # Flash the correct answer 5 times
                                 g.output(sequence[i], g.HIGH)
                                 time.sleep(0.5)
                                 g.output(sequence[i], g.LOW)
